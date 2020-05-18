@@ -3,12 +3,19 @@ import feedparser
 #Requires feedparser package install with command "pip install feedparser"
 #wheel package maybe required for installing feedparser completely, install using "pip install wheel" before installing feedparser
 def printer(entry):
-    print('Published Date: ',entry.published)
-    print('Title :',entry.title)
-    print('Summary:',entry.summary)
-    print('Link:',entry.link)
-    print('**********')
-
+    #print('Published Date: ',entry.published_parsed)
+    try:
+        print('Published Date: ', entry.published)
+        print('Title :',entry.title)
+        print('Summary:',entry.summary)
+        print('Link:',entry.link)
+        print('**********')
+        print("")
+    except AttributeError:
+        print('Title :',entry.title)
+        print('Link:', entry.link)
+        print('**********')
+        print("")
 
 def feed(links):
     print('1.TIME World')
@@ -23,6 +30,7 @@ def feed(links):
     print('10.Reuters')
     print('11.Times of India')
     print('12.The Guardian')
+    print('13.ANI News')
     n=(int(input('Enter Choice: ')))-1
     NewsFeed = feedparser.parse(links[n])
 
@@ -35,11 +43,19 @@ def search(links):
     k=False
     for i in range(0,len(links)):
         NewsFeed = feedparser.parse(links[i])
-        for j in range(0,len(NewsFeed.entries)):
-            isPresent=query.lower() in NewsFeed.entries[j].title.lower()
-            if isPresent==True:
-                k=True
-                printer(NewsFeed.entries[j])
+        try:
+            for j in range(0,len(NewsFeed.entries)):
+                isPresent=query.lower() in NewsFeed.entries[j].title.lower()
+                isThere=query.lower() in NewsFeed.entries[j].summary.lower()
+                if isPresent==True or isThere==True:
+                    k=True
+                    printer(NewsFeed.entries[j])
+        except:
+            for j in range(0,len(NewsFeed.entries)):
+                isPresent=query.lower() in NewsFeed.entries[j].title.lower()
+                if isPresent:
+                    k=True
+                    printer(NewsFeed.entries[j])
     if k==False:
         print("No Info Found")
 
@@ -60,6 +76,7 @@ if __name__ == '__main__':
     feedlink.append("http://feeds.reuters.com/Reuters/worldNews")
     feedlink.append("https://timesofindia.indiatimes.com/rssfeedstopstories.cms")
     feedlink.append("https://www.theguardian.com/world/rss")
+    feedlink.append("https://aninews.in/rss/feed/category/world.xml")
     mode=input("Enter S for search mode or F for Feed mode ")
     if mode=='S' or mode=='s':
         search(feedlink)

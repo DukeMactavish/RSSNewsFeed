@@ -1,0 +1,2 @@
+python RSSNewsFeed.py
+pause

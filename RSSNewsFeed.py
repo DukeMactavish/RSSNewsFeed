@@ -11,6 +11,7 @@ def printer(entry):
         print('Link:',entry.link)
         print('**********')
         print("")
+
     except AttributeError:
         print('Title :',entry.title)
         print('Link:', entry.link)
@@ -50,12 +51,14 @@ def search(links):
                 if isPresent==True or isThere==True:
                     k=True
                     printer(NewsFeed.entries[j])
-        except:
+
+        except AttributeError:
             for j in range(0,len(NewsFeed.entries)):
                 isPresent=query.lower() in NewsFeed.entries[j].title.lower()
                 if isPresent:
                     k=True
                     printer(NewsFeed.entries[j])
+
     if k==False:
         print("No Info Found")
 
